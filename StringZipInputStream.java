@@ -150,9 +150,9 @@ final class StringZipInputStream implements java.io.Serializable {
 		bitSet.set(i, true); 
 		return bitSet;
 	}
-	// A method to encode the messsage
-	public boolean decodeMessage(Map<Character, String> charCode) throws 
-	IOException {
+        // Decode the message from the encoded file
+        public boolean decodeMessage(Map<Character, String> charCode) throws
+        IOException {
 		StringBuffer temp = new StringBuffer();
 
 		try {
