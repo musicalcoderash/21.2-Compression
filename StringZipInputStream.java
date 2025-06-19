@@ -114,7 +114,7 @@ final class StringZipInputStream implements java.io.Serializable {
                 doGenerateCode(node.right, map, s + '1');
         }
 
-	// A method to encode the messsage
+        // A method to encode the message
 	private static String encodeMessage(Map<Character, String> charCode, 
 			String sentence) throws IOException {
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -150,7 +150,7 @@ final class StringZipInputStream implements java.io.Serializable {
 		bitSet.set(i, true); 
 		return bitSet;
 	}
-        // Decode the message from the encoded file
+        // Decode the message from the encoded file.
         public boolean decodeMessage(Map<Character, String> charCode) throws
         IOException {
 		StringBuffer temp = new StringBuffer();
