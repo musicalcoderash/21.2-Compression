@@ -97,22 +97,22 @@ final class StringZipInputStream implements java.io.Serializable {
 		return vector;
 	}
 	// A method to generate relative codes
-	private static Map<Character, String> generateCodes(Set<Character> chars, 
-			NodeH node) {
-		final Map<Character, String> map = new HashMap<Character, String>();
-		doGenerateCode(node, charCode, "");
-		return map;
-	}
+        private static Map<Character, String> generateCodes(Set<Character> chars,
+                        NodeH node) {
+                final Map<Character, String> map = new HashMap<Character, String>();
+                doGenerateCode(node, map, "");
+                return map;
+        }
 
-	private static void doGenerateCode(NodeH node, Map<Character, String> map,
-			String s) {
-		if (node.left == null && node.right == null) {
-			charCode.put(node.ch, s);
-			return;
-		}
-		doGenerateCode(node.left, charCode, s + '0');
-		doGenerateCode(node.right, charCode, s + '1');
-	}
+        private static void doGenerateCode(NodeH node, Map<Character, String> map,
+                        String s) {
+                if (node.left == null && node.right == null) {
+                        map.put(node.ch, s);
+                        return;
+                }
+                doGenerateCode(node.left, map, s + '0');
+                doGenerateCode(node.right, map, s + '1');
+        }
 
 	// A method to encode the messsage
 	private static String encodeMessage(Map<Character, String> charCode, 
