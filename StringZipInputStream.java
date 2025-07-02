@@ -155,9 +155,8 @@ final class StringZipInputStream implements java.io.Serializable {
 	IOException {
 		StringBuffer temp = new StringBuffer();
 
-		try {
-			ObjectInputStream objectInputStream = new ObjectInputStream(new 
-					FileInputStream(  encodedFileName));
+		try (ObjectInputStream objectInputStream = new ObjectInputStream(new 
+				FileInputStream(  encodedFileName))) {
 			BitSet bitSet = (BitSet) objectInputStream.readObject();
 
 			for (int i = 0; i < bitSet.length() - 1; i++) {
@@ -170,27 +169,25 @@ final class StringZipInputStream implements java.io.Serializable {
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		FileWriter fileWriter = new FileWriter(new File( decodedFileName));
+		try (FileWriter fileWriter = new FileWriter(new File( decodedFileName))) {
 
 
-		String value = "";
+		StringBuilder value = new StringBuilder();
 		for (char c : temp.toString().toCharArray()) {
-			value = value + c;
-			if (charCode.containsValue(value)) {
+			value.append(c);
+			String currentValue = value.toString();
+			if (charCode.containsValue(currentValue)) {
 				for (Map.Entry<Character, String> e : charCode.entrySet()) {
-					if (e.getValue().equals(value)) {
-						value = e.getKey() + "";
+					if (e.getValue().equals(currentValue)) {
+						fileWriter.append(e.getKey());
 						break;
 					}
 				}
-				fileWriter.append(value);
-				value = "";
-			} else {
-				continue;
+				value.setLength(0); // Clear the StringBuilder
 			}
 		}
 		System.out.println("Decompression done!!Please check the file\n\n");
-		fileWriter.close();
+		} // End of try-with-resources for FileWriter
 		return true;
 	}
 
@@ -198,15 +195,18 @@ final class StringZipInputStream implements java.io.Serializable {
 	public static void start() throws IOException, 
 	ClassNotFoundException, InterruptedException {
 		StringZipInputStream compressObject = new StringZipInputStream();
-		Scanner scanner = new Scanner(System.in);
+		try (Scanner scanner = new Scanner(System.in)) {
 		int option;
 		String fileNameToCompress;
 		System.out.println("Enter file name to compress");
 		fileNameToCompress = scanner.next();
-		int len=fileNameToCompress.length();
-		String fileName="";
-		for (int index=0;index<len-4;index++)
-			fileName=fileName+fileNameToCompress.charAt(index);
+		String fileName;
+		int lastDotIndex = fileNameToCompress.lastIndexOf('.');
+		if (lastDotIndex > 0) {
+			fileName = fileNameToCompress.substring(0, lastDotIndex);
+		} else {
+			fileName = fileNameToCompress; // No extension found
+		}
 		encodedFileName = fileName + ".encoded";
 		decodedFileName = fileName + ".decoded.txt";
 		double bytes = new File(fileNameToCompress).length();
@@ -265,6 +265,7 @@ final class StringZipInputStream implements java.io.Serializable {
 
 			}
 		}
+		} // End of try-with-resources for Scanner
 
 
 	}
